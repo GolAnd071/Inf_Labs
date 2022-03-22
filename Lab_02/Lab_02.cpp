@@ -18,14 +18,14 @@ float mean_1(float const psi[], float const pdf[], float const dv, unsigned star
     if (start == end)
         return psi[start] * pdf[start] * dv;
     float mid = (start + end) / 2;
-    return dv * (mean_1(psi, pdf, 1, start, mid) + mean_1(psi, pdf, 1, mid + 1, end));
+    return mean_1(psi, pdf, dv, start, mid) + mean_1(psi, pdf, dv, mid + 1, end);
 }
 
 float mean_2(float const psi[], float const pdf[], float const dv, unsigned size)
 {
     float* psi_ = new float[size];
     for (int i = 0; i < size; ++i) {
-        psi_[i] = psi[i] * pdf[i];
+        psi_[i] = psi[i] * pdf[i] * dv;
     }
     int step = 1;
     while (step < size) {
@@ -33,7 +33,7 @@ float mean_2(float const psi[], float const pdf[], float const dv, unsigned size
             psi_[i] += psi_[i + step];
         step *= 2;
     }
-    return dv * psi_[0];
+    return psi_[0];
 }
 
 float mean_3(float const psi[], float const pdf[], float const dv, unsigned size)
