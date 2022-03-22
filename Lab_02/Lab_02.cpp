@@ -2,6 +2,8 @@
 //
 
 #include <iostream>
+#include <numbers>
+#include <iomanip>
 
 float mean(float const psi[], float const pdf[], float const dv, unsigned size)
 {
@@ -26,9 +28,11 @@ float mean_2(float const psi[], float const pdf[], float const dv, unsigned size
         psi_[i] = psi[i] * pdf[i];
     }
     int step = 1;
-    while (step < size)
-        for (int i = 0; i < size; i += 2 * step)
+    while (step < size) {
+        for (int i = 0; i < size - step; i += 2 * step)
             psi_[i] += psi_[i + step];
+        step *= 2;
+    }
     return dv * psi_[0];
 }
 
@@ -63,7 +67,30 @@ double mean_5(float const psi[], float const pdf[], float const dv, unsigned siz
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    const double dv = 1e-4, T = 1;
+    const int size = 1e7;
+    float* psi = new float[size], * psi_2 = new float[size], * pdf = new float[size];
+    double nu = -(size / 2) * dv;
+    for (int i = 0; i < size; ++i) {
+        psi[i] = 1;
+        psi_2[i] = abs(nu);
+        pdf[i] = 1.0 / sqrt(T * std::numbers::pi) * exp(-(nu) * (nu) / T);
+        nu += dv;
+    }
+    std::cout << "Maxwell distribution (expected res = 1.0000000000)\n";
+    std::cout << "mean:   " << std::setprecision(10) << mean(psi, pdf, dv, size) << '\n';
+    std::cout << "mean_1: " << std::setprecision(10) << mean_1(psi, pdf, dv, 0, size - 1) << '\n';
+    std::cout << "mean_2: " << std::setprecision(10) << mean_2(psi, pdf, dv, size) << '\n';
+    std::cout << "mean_3: " << std::setprecision(10) << mean_3(psi, pdf, dv, size) << '\n';
+    std::cout << "mean_4: " << std::setprecision(10) << mean_4(psi, pdf, dv, size) << '\n';
+    std::cout << "mean_5: " << std::setprecision(10) << mean_5(psi, pdf, dv, size) << '\n';
+    std::cout << "\nNon-trivial average (expected res = " << std::setprecision(10) << sqrt(T / std::numbers::pi) << ")\n";
+    std::cout << "mean:   " << std::setprecision(10) << mean(psi_2, pdf, dv, size) << '\n';
+    std::cout << "mean_1: " << std::setprecision(10) << mean_1(psi_2, pdf, dv, 0, size - 1) << '\n';
+    std::cout << "mean_2: " << std::setprecision(10) << mean_2(psi_2, pdf, dv, size) << '\n';
+    std::cout << "mean_3: " << std::setprecision(10) << mean_3(psi_2, pdf, dv, size) << '\n';
+    std::cout << "mean_4: " << std::setprecision(10) << mean_4(psi_2, pdf, dv, size) << '\n';
+    std::cout << "mean_5: " << std::setprecision(10) << mean_5(psi_2, pdf, dv, size) << '\n';
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
