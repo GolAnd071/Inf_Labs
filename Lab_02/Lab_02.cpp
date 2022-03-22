@@ -65,9 +65,9 @@ double mean_5(float const psi[], float const pdf[], float const dv, unsigned siz
     return static_cast<double>(dv) * sum;
 }
 
-int main()
+void MaxwellDistributionTest(double T)
 {
-    const double dv = 1e-4, T = 1;
+    const double dv = 1e-3;
     const int size = 1e7;
     float* psi = new float[size], * psi_2 = new float[size], * pdf = new float[size];
     double nu = -(size / 2) * dv;
@@ -78,19 +78,38 @@ int main()
         nu += dv;
     }
     std::cout << "Maxwell distribution (expected res = 1.0000000000)\n";
-    std::cout << "mean:   " << std::setprecision(10) << mean(psi, pdf, dv, size) << '\n';
-    std::cout << "mean_1: " << std::setprecision(10) << mean_1(psi, pdf, dv, 0, size - 1) << '\n';
-    std::cout << "mean_2: " << std::setprecision(10) << mean_2(psi, pdf, dv, size) << '\n';
-    std::cout << "mean_3: " << std::setprecision(10) << mean_3(psi, pdf, dv, size) << '\n';
-    std::cout << "mean_4: " << std::setprecision(10) << mean_4(psi, pdf, dv, size) << '\n';
-    std::cout << "mean_5: " << std::setprecision(10) << mean_5(psi, pdf, dv, size) << '\n';
+    std::cout << "mean:   " << std::fixed << std::setprecision(10) << mean(psi, pdf, dv, size) << ' ' << abs(mean(psi, pdf, dv, size) - 1.0) << '\n';
+    std::cout << "mean_1: " << std::fixed << std::setprecision(10) << mean_1(psi, pdf, dv, 0, size - 1) << ' ' << abs(mean_1(psi, pdf, dv, 0, size - 1) - 1.0) << '\n';
+    std::cout << "mean_2: " << std::fixed << std::setprecision(10) << mean_2(psi, pdf, dv, size) << ' ' << abs(mean_2(psi, pdf, dv, size) - 1.0) << '\n';
+    std::cout << "mean_3: " << std::fixed << std::setprecision(10) << mean_3(psi, pdf, dv, size) << ' ' << abs(mean_3(psi, pdf, dv, size) - 1.0) << '\n';
+    std::cout << "mean_4: " << std::fixed << std::setprecision(10) << mean_4(psi, pdf, dv, size) << ' ' << abs(mean_4(psi, pdf, dv, size) - 1.0) << '\n';
+    std::cout << "mean_5: " << std::fixed << std::setprecision(10) << mean_5(psi, pdf, dv, size) << ' ' << abs(mean_5(psi, pdf, dv, size) - 1.0) << '\n';
     std::cout << "\nNon-trivial average (expected res = " << std::setprecision(10) << sqrt(T / std::numbers::pi) << ")\n";
-    std::cout << "mean:   " << std::setprecision(10) << mean(psi_2, pdf, dv, size) << '\n';
-    std::cout << "mean_1: " << std::setprecision(10) << mean_1(psi_2, pdf, dv, 0, size - 1) << '\n';
-    std::cout << "mean_2: " << std::setprecision(10) << mean_2(psi_2, pdf, dv, size) << '\n';
-    std::cout << "mean_3: " << std::setprecision(10) << mean_3(psi_2, pdf, dv, size) << '\n';
-    std::cout << "mean_4: " << std::setprecision(10) << mean_4(psi_2, pdf, dv, size) << '\n';
-    std::cout << "mean_5: " << std::setprecision(10) << mean_5(psi_2, pdf, dv, size) << '\n';
+    std::cout << "mean:   " << std::fixed << std::setprecision(10) << mean(psi_2, pdf, dv, size) << ' ' << abs(mean(psi_2, pdf, dv, size) - sqrt(T / std::numbers::pi)) << '\n';
+    std::cout << "mean_1: " << std::fixed << std::setprecision(10) << mean_1(psi_2, pdf, dv, 0, size - 1) << ' ' << abs(mean_1(psi_2, pdf, dv, 0, size - 1) - sqrt(T / std::numbers::pi)) << '\n';
+    std::cout << "mean_2: " << std::fixed << std::setprecision(10) << mean_2(psi_2, pdf, dv, size) << ' ' << abs(mean_2(psi_2, pdf, dv, size) - sqrt(T / std::numbers::pi)) << '\n';
+    std::cout << "mean_3: " << std::fixed << std::setprecision(10) << mean_3(psi_2, pdf, dv, size) << ' ' << abs(mean_3(psi_2, pdf, dv, size) - sqrt(T / std::numbers::pi)) << '\n';
+    std::cout << "mean_4: " << std::fixed << std::setprecision(10) << mean_4(psi_2, pdf, dv, size) << ' ' << abs(mean_4(psi_2, pdf, dv, size) - sqrt(T / std::numbers::pi)) << '\n';
+    std::cout << "mean_5: " << std::fixed << std::setprecision(10) << mean_5(psi_2, pdf, dv, size) << ' ' << abs(mean_5(psi_2, pdf, dv, size) - sqrt(T / std::numbers::pi)) << '\n';
+}
+
+int main()
+{
+    while (true) {
+        double T;
+        std::cout << "Maxwell Distribution Test for T = ";
+        std::cin >> T;
+        MaxwellDistributionTest(T);
+        std::cout << '\n';
+    }
+    /*
+    std::cout << "Maxwell Distribution Test for T = " << 1.0 << ":\n";
+    MaxwellDistributionTest(1.0);
+    std::cout << "\nMaxwell Distribution Test for T = " << 10.0 << ":\n";
+    MaxwellDistributionTest(10.0);
+    std::cout << "\nMaxwell Distribution Test for T = " << 100.0 << ":\n";
+    MaxwellDistributionTest(100.0);
+    */
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
